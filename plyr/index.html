@@ -8,41 +8,53 @@
 
     <link rel="stylesheet" href="https://unpkg.com/plyr@3/dist/plyr.css">
 
-    <link rel="stylesheet" href="style.css" />
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
     <div class="container">
-        <video controls crossorigin playsinline id="player"
-            poster="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.jpg">
-            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" type="video/mp4"
-                size="576">
-            <!-- <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-720p.mp4" type="video/mp4"
-                size="720">
-            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4"
-                size="1080"> -->
-
-            <!-- Caption files -->
-            <!-- <track kind="captions" label="English" srclang="en"
-                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.en.vtt" default>
-            <track kind="captions" label="Français" srclang="fr" -->
-                src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-HD.fr.vtt">
-            <!-- Fallback for browsers that don't support the <video> element -->
-            <a href="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" download>Download</a>
-        </video>
+        <video controls crossorigin playsinline
+            poster="https://bitdash-a.akamaihd.net/content/sintel/poster.png"></video>
     </div>
+    <!-- Plyr resources and browser polyfills are specified in the pen settings -->
+    <!-- Hls.js 0.9.x and 0.10.x both have critical bugs affecting this demo. Using fixed git hash to when it was working (0.10.0 pre-release), until https://github.com/video-dev/hls.js/issues/1790 has been resolved -->
+    
+    <script
+    src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>
     <script src="https://unpkg.com/plyr@3.5.4/dist/plyr.min.js"></script>
+    <script src="https://cdn.rawgit.com/video-dev/hls.js/18bb552/dist/hls.min.js"></script>
 
     <script src="app.js"></script>
 
-    <!-- <script>
-        const player = new Plyr("video", { captions: { active: true } });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const source = '//210.4.66.11:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4';
+            const video = document.querySelector('video');
 
-        // Expose player so it can be used from the console
-        window.player = player;
-    </script> -->
+            // For more options see: https://github.com/sampotts/plyr/#options
+            // captions.update is required for captions to work with hls.js
+            const player = new Plyr(video, { captions: { active: true, update: true, language: 'en' } });
+
+            if (!Hls.isSupported()) {
+                video.src = source;
+            } else {
+                // For more Hls.js options, see https://github.com/dailymotion/hls.js
+                const hls = new Hls();
+                hls.loadSource(source);
+                hls.attachMedia(video);
+                window.hls = hls;
+
+                // Handle changing captions
+                player.on('languagechange', () => {
+                    // Caption support is still flaky. See: https://github.com/sampotts/plyr/issues/994
+                    setTimeout(() => hls.subtitleTrack = player.currentTrack, 50);
+                });
+            }
+
+            // Expose player so it can be used from the console
+            window.player = player;
+        });
+    </script>
 </body>
 
 </html>
