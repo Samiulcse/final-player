@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://unpkg.com/hls.js"></script>
+    <script type="module">
+        import { Eplayer } from 'https://unpkg.com/eplayer'
+        customElements.define('e-player', Eplayer)
+    </script>
+    
+    <e-player src="http://210.4.66.11:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4"></e-player>
+</body>
+
+</html>
