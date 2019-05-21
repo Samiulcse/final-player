@@ -14,10 +14,12 @@
 <body>
     <div class="container">
         <video controls crossorigin playsinline poster="https://bitdash-a.akamaihd.net/content/sintel/poster.png">
-            <source src="https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-1080p.mp4" type="video/mp4" size="1080">
-            <source src="http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/test-720.mp4" type='video/mp4' size="720">
-            <source src="http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/Ajke_Ami_Sarabela-Rokte_Veja_Bangladesh_L-576.mp4" type='video/mp4' size="576">
-        </video>
+        <!-- <source src="http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4" size="720"> -->
+        <!-- <source src="http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/26_No_Platform_L.mp4" size="360"> -->
+    
+    </video>
+        <button id="low">Low Quality</button>
+        <button id="high">High Quality</button>
     </div>
 
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=es6,Array.prototype.includes,CustomEvent,Object.entries,Object.values,URL"></script>
@@ -55,27 +57,22 @@
                 controls
             });
 
-            // player.source = {
-            //     type: 'video',
-            //     sources: [{
-            //         src: 'http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4',
-            //         type: 'video/mp4',
-            //         size: 360,
-            //     }, {
-            //         src: 'http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/Ajke_Ami_Sarabela-Rokte_Veja_Bangladesh_L.mp4',
-            //         type: 'video/mp4',
-            //         size: 720,
-            //     }, ],
-            // };
-
             // player.on('qualitychange', event => {
             //     source = '';
             //     const instance = event.detail.plyr;
             //     var quality = instance.quality;
+            //     var source = instance.source;
             //     console.log(quality);
-            //     play_video(source);
+            //     // play_video('http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4');
             // });
 
+
+            $('#low').click(function (e) { 
+                play_video('http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/test.mp4');
+            });
+            $('#high').click(function (e) { 
+                play_video('http://stream.b2mwap.com:8080/m3ugen/segsrc/mp4/chayachobi/26_No_Platform_L.mp4');
+            });
             function play_video(source) {
                 if (!Hls.isSupported()) {
                     video.src = source;
